@@ -1,5 +1,6 @@
 class Movie < ApplicationRecord
-  # validates :name, :description,
-  #           :image_url, :initial_date,
-  #           :finish_date, presence: true
+
+  has_many :reservations
+  validates :name, :description,
+            :image_url, presence: true
 end

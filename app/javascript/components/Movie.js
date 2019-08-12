@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 
 class Movie extends React.Component{
 
@@ -16,7 +16,11 @@ class Movie extends React.Component{
       let name = this.refs.name.value;
       let id = this.props.movies.id;
       let description = this.refs.description.value;
-      let movie = {id: id , name: name , description: description};
+      let movie = {
+        id: id ,
+        name: name ,
+        description: description
+      };
       this.props.handleUpdate(movie);
     }
     this.setState({ editable: !this.state.editable })
@@ -47,21 +51,26 @@ class Movie extends React.Component{
     let currentName = this.getName(this.props.movies)
     let currentDescripton = this.getDescription(this.props.movies)
 
-    let nombre = this.state.editable ? <input type='text' ref='name' defaultValue={currentName}/> : <h3 key={this.props.movies.id}>Nombre:  {currentName}</h3>
+    let nombre = this.state.editable ? <input type='text' ref='name' defaultValue={currentName}/> : <span key={this.props.movies.id}>Nombre:  {currentName}</span>
 
-    let description = this.state.editable ? <input type='text' ref='description' defaultValue={currentDescripton}/> : <h3 key={currentDescripton}>Descripcion: {currentDescripton}</h3>
+    let description = this.state.editable ? <input type='text' ref='description' defaultValue={currentDescripton}/> : <span key={currentDescripton}>Descripcion: {currentDescripton}</span>
 
     return (
-      <div>
-        <div>
-          {nombre}
-          {description}
+      <div className="card-columns">
+        <div className="card" key={this.props.movies.id}>
+          <img src={this.props.movies.image_url} className="card-img-top" alt={this.props.movies.name} />
+          <div className="card-body">
+            <h3 className="card-title">{nombre}</h3>
+            <h5 className="card-text">{description}</h5>
+          </div>
+          <div className="card-footer">
+            <button onClick={this.handleDelete}>Delete</button>
+            <button onClick={this.handleEdit}>
+              {" "}
+              {this.state.editable ? "Submit" : "Edit"}{" "}
+            </button>
+          </div>
         </div>
-        <button onClick={this.handleDelete}>Delete</button>
-        <button onClick={this.handleEdit}>
-          {" "}
-          {this.state.editable ? "Submit" : "Edit"}{" "}
-        </button>
       </div>
     );
   }

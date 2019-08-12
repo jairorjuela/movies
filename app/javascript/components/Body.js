@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import NewMovie from './NewMovie'
 import AllMovies from './AllMovies'
 
@@ -26,7 +26,11 @@ class Body extends React.Component{
   handleFormSubmit(movie){
     event.preventDefault();
     let body = JSON.stringify({ movie:
-      {name: movie.name, description: movie.description}
+      {
+        name: movie.name,
+        description: movie.description,
+        image_url: movie.image_url
+      }
     })
 
     fetch('/v1/movies', {
@@ -67,8 +71,8 @@ class Body extends React.Component{
 
   handleUpdate(movie) {
     const movieBody = {
-      "name":movie.name,
-      "description":movie.description
+      "name": movie.name,
+      "description": movie.description
     }
     fetch('/v1/movies/' + movie.id, {
       method: 'PUT',
@@ -90,15 +94,19 @@ class Body extends React.Component{
 
   render() {
     return (
-      <div>
-        <NewMovie handleFormSubmit={this.handleFormSubmit} />
-        <h1>Our Movies</h1>
-        <AllMovies
-          movies={this.state.movies}
-          handleDelete={this.handleDelete}
-          handleUpdate={this.handleUpdate}
-        />
-      </div>
+      <Fragment>
+        <div className="col-12">
+          <NewMovie handleFormSubmit={this.handleFormSubmit} />
+        </div>
+        <div className="col-12">
+          <h1>Películas: </h1>
+          <AllMovies
+            movies={this.state.movies}
+            handleDelete={this.handleDelete}
+            handleUpdate={this.handleUpdate}
+          />
+        </div>
+      </Fragment>
     );
   }
 };

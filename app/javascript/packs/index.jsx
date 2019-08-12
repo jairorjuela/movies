@@ -4,7 +4,9 @@ import Main from '../components/Main'
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Main />,
+    <div className="container">
+      <Main />
+    </div>,
     document.body.appendChild(document.createElement('div')),
   )
 })
