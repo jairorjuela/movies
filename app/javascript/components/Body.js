@@ -9,65 +9,94 @@ class Body extends React.Component{
     this.state = {
       movies: []
     };
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
+    this.addNewMovie = this.addNewMovie.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+    this.removeMovie = this.removeMovie.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.updateMovie = this.updateMovie.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount(){
     fetch('/v1/movies.json')
-    .then(function(response) {
-      return response.json();
+      .then((response) => {return response.json()})
+      .then((data) => {this.setState({ movies: data }) });
+  }
+
+  handleFormSubmit(movie){
+    event.preventDefault();
+    let body = JSON.stringify({ movie:
+      {name: movie.name, description: movie.description}
     })
-    .then((all_movies) => {
-      this.setState({
-        movies: all_movies
-      })
+
+    fetch('/v1/movies', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body,
     })
-    .catch(error => console.log(error))
+    .then((response) => {return response.json()})
+    .then((movie)=>{
+      this.addNewMovie(movie)
+    })
   }
 
-  handleSubmit(movie) {
-    var newState = this.state.movies.concat(movie);
-    this.setState({ movies: newState })
+  addNewMovie(movie){
+    this.setState({
+      movies: this.state.movies.concat(movie)
+    })
   }
 
-  removeMovie = (id) => {
-    console.log("SSSSS");
-    var newMovies = this.state.movies.filter((movie) => {
-      return movie.id != id;
-    });
-    this.setState({ movies: newMovies });
-  }
-
-  handleUpdate(movie) {
-    console.log("desde body");
-  }
-
-  updateItems(movie) {
-    var movies = this.state.movies.filter((i) => { return i.id != movie.id });
-    movies.push(movie);
-
-    this.setState({movies: movies });
-  }
-
-  handleDelete(id) {
+  handleDelete(id){
     const idDelete = id
     fetch('/v1/movies/' + id, {
       method: 'DELETE'
     })
-    .then(function(id) {
-      this.removeMovie(idDelete);
+    .then(()=>{
+      this.removeMovie(id);
     })
-    .catch(error => console.log(error))
+  }
+
+  removeMovie(id){
+    let newMovies = this.state.movies.filter((movie) => movie.id !== id)
+    this.setState({
+      movies: newMovies
+    })
+  }
+
+  handleUpdate(movie) {
+    const movieBody = {
+      "name":movie.name,
+      "description":movie.description
+    }
+    fetch('/v1/movies/' + movie.id, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(movieBody)
+    })
+    .then((response)=>{
+      this.updateMovie(movie)
+    })
+  }
+
+  updateMovie(movie){
+    let newMovies = this.state.movies.filter((m) => m.id !== movie.id)
+    newMovies.push(movie)
+    this.setState({
+      movies: newMovies
+    })
   }
 
   render() {
     return (
       <div>
-        <NewMovie handleSubmit={this.handleSubmit} />
+        <NewMovie handleFormSubmit={this.handleFormSubmit} />
         <h1>Our Movies</h1>
         <AllMovies
           movies={this.state.movies}
           handleDelete={this.handleDelete}
-          onUpdate={this.handleUpdate}
+          handleUpdate={this.handleUpdate}
         />
       </div>
     );

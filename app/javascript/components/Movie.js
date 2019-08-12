@@ -8,15 +8,15 @@ class Movie extends React.Component{
       editable: false
     };
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleEdit() {
-    console.log(this.props.movies.id);
     if(this.state.editable) {
-      var name = this.refs.name.value;
-      var id = this.props.movies.id;
-      var description = this.refs.description.value;
-      var movie = {id: id , name: name , description: description};
+      let name = this.refs.name.value;
+      let id = this.props.movies.id;
+      let description = this.refs.description.value;
+      let movie = {id: id , name: name , description: description};
       this.props.handleUpdate(movie);
     }
     this.setState({ editable: !this.state.editable })
@@ -38,6 +38,11 @@ class Movie extends React.Component{
     }
   }
 
+  handleDelete(){
+    this.props.handleDelete(this.props.movies.id)
+  }
+
+
   render() {
     let currentName = this.getName(this.props.movies)
     let currentDescripton = this.getDescription(this.props.movies)
@@ -52,7 +57,7 @@ class Movie extends React.Component{
           {nombre}
           {description}
         </div>
-        <button onClick={this.props.handleDelete}>Delete</button>
+        <button onClick={this.handleDelete}>Delete</button>
         <button onClick={this.handleEdit}>
           {" "}
           {this.state.editable ? "Submit" : "Edit"}{" "}

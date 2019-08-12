@@ -4,33 +4,31 @@ class NewMovie extends React.Component{
 
   constructor(props){
     super(props)
-    this.handleClick = this.handleClick.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleClick() {
-    var name = this.refs.name.value;
-    var description = this.refs.description.value;
-    const movieBody = {
-      "name":name,
-      "description":description
-    }
-    fetch('/v1/movies/', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(movieBody)
-    })
-    .then((movie) => {
-      this.props.handleSubmit(movie);
-    })
-    .catch(error => console.log(error))
+  handleSubmit(e){
+    e.preventDefault();
+    const form = {
+      name: this.refs.name.value,
+      description: this.refs.description.value
+    };
+    this.createMovie(form)
+    this.refs.name.value = ''
+    this.refs.description.value = ''
+  }
+
+  createMovie = (form) => {
+    this.props.handleFormSubmit(form)
   }
 
   render() {
+
     return (
       <div>
         <input ref="name" placeholder="Enter the name of the movie" />
         <input ref="description" placeholder="Enter a description" />
-        <button onClick={this.handleClick}>Submit</button>
+        <button onClick={this.handleSubmit}>Submit</button>
       </div>
     );
   }
