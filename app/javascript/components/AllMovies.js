@@ -11,7 +11,6 @@ class AllMovies extends React.Component{
           <Movie
             movies={movie}
             handleDelete={this.props.handleDelete}
-            handleEdit={this.handleEdit}
             handleUpdate={this.props.handleUpdate}
           />
         </div>

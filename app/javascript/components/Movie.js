@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import Reservation from './Reservation'
 
 class Movie extends React.Component{
 
@@ -9,6 +10,7 @@ class Movie extends React.Component{
     };
     this.handleEdit = this.handleEdit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   handleEdit() {
@@ -46,6 +48,30 @@ class Movie extends React.Component{
     this.props.handleDelete(this.props.movies.id)
   }
 
+  handleFormSubmit(reservation){
+    event.preventDefault();
+    let body = JSON.stringify({ reservation:
+      {
+        name: reservation.name,
+        phone: reservation.phone,
+        identification_card: reservation.identification_card,
+        email: reservation.email,
+        movie_id: this.props.movies.id
+      }
+    })
+
+    fetch('/v1/reservations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body,
+    })
+    .then((response) => {return response.json()})
+    .catch(function(error) {
+      console.log('Hubo un problema con la petición Fetch:' + error.message);
+    });
+  }
 
   render() {
     let currentName = this.getName(this.props.movies)
@@ -69,6 +95,9 @@ class Movie extends React.Component{
               {" "}
               {this.state.editable ? "Submit" : "Edit"}{" "}
             </button>
+            <Reservation
+              handleFormSubmit={this.handleFormSubmit}
+            />
           </div>
         </div>
       </div>

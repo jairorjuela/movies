@@ -12,7 +12,8 @@ class V1::ReservationsController < ApplicationController
   end
 
   def create
-    if Reservation.where(movie_id: reservations_params[:movie_id]).count <= 10
+    counter = Reservation.where(movie_id: reservations_params[:movie_id]).count
+    if counter <= 10
       @reservation = Reservation.new(reservations_params)
       if @reservation.save
         render json: @reservation, status: 201
@@ -20,7 +21,7 @@ class V1::ReservationsController < ApplicationController
         render json: { errors: @reservation.errors }, status: 422
       end
     else
-      render json: { errors: "Reservaciones llenas" }, status: 422
+      format.json { render json: [{"error": "Reservas Llenas"}], status: :unprocessable_entity }
     end
   end
 

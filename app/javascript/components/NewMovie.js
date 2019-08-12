@@ -85,7 +85,7 @@ class NewMovie extends React.Component{
                   onClick={this.handleSubmit}
                   data-dismiss="modal"
                 >
-                  Save changes
+                  Crear Película
                 </button>
               </div>
             </div>
